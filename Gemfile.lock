@@ -92,6 +92,7 @@ GEM
     debug (1.10.0)
       irb (~> 1.10)
       reline (>= 0.3.8)
+    diff-lcs (1.6.0)
     docile (1.4.1)
     drb (2.2.1)
     erubi (1.13.1)
@@ -200,6 +201,23 @@ GEM
       psych (>= 4.0.0)
     reline (0.6.0)
       io-console (~> 0.5)
+    rspec-core (3.13.3)
+      rspec-support (~> 3.13.0)
+    rspec-expectations (3.13.3)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.13.0)
+    rspec-mocks (3.13.2)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.13.0)
+    rspec-rails (7.1.1)
+      actionpack (>= 7.0)
+      activesupport (>= 7.0)
+      railties (>= 7.0)
+      rspec-core (~> 3.13)
+      rspec-expectations (~> 3.13)
+      rspec-mocks (~> 3.13)
+      rspec-support (~> 3.13)
+    rspec-support (3.13.2)
     securerandom (0.4.1)
     simplecov (0.22.0)
       docile (~> 1.1)
@@ -237,6 +255,7 @@ DEPENDENCIES
   pry
   puma (>= 5.0)
   rails (~> 7.1.5, >= 7.1.5.1)
+  rspec-rails
   simplecov
   tzinfo-data
 
