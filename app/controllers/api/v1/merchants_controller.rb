@@ -23,7 +23,7 @@ class Api::V1::MerchantsController < ApplicationController
     end
 
     def destroy
-        merchant  = Merchant.delete(params[:id])
+        Merchant.delete(params[:id])
         render json: { message: "Merchant deleted successfully" }, status: :no_content
     end
 
