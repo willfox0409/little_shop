@@ -7,9 +7,14 @@ class MerchantSerializer
           type: "merchant",
           attributes: {
             name: merchant.name,
+            item_count: merchant.item_count
           }
         }
-      end
+      end,
+      meta: {
+        # count: merchants.length
+      }
+
     }
   end
 
@@ -23,4 +28,5 @@ class MerchantSerializer
       }
     }
   end
+
 end

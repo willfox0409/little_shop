@@ -1,6 +1,9 @@
 class Api::V1::MerchantsController < ApplicationController
     def index
-        merchants = Merchant.all
+        merchants = Merchant.sort_by_descending
+        if params[:status] == "returned"
+            merchants = Merchant.status_returned
+        end
         render json: MerchantSerializer.format_merchants(merchants)
     end
 
@@ -11,7 +14,7 @@ class Api::V1::MerchantsController < ApplicationController
 
     def create
         merchant = Merchant.create(merchant_params)
-        render json: MerchantSerializer.format_single(merchant)
+        render json: MerchantSerializer.format_single(merchant), status: :created
     end
 
     def update
