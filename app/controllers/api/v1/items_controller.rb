@@ -20,7 +20,7 @@ class Api::V1::ItemsController < ApplicationController
     end
 
     def destroy
-        item  = Item.delete(params[:id])
+        Item.delete(params[:id])
         render json: { message: "Item deleted successfully" }, status: :no_content
     end
 
