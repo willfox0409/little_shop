@@ -1,11 +1,33 @@
 require "rails_helper"
 
 RSpec.describe Customer, type: :model do
-  it {should have_many :invoices}
+  describe "relationships" do
+    it { should have_many(:invoices) }
+  end
 
-  describe "" do
-    before(:each) do
-    end
+  it "has many invoices" do
+    customer = Customer.create!(first_name: "John", last_name: "Doe")
+    invoice = Invoice.create!(customer: customer, merchant: Merchant.create!(name: "Store A"), status: "paid")
+
+    expect(customer.invoices).to include(invoice)
   end
 end
+
+
+
+
+
+
+
+
+
+
+# RSpec.describe Customer, type: :model do
+#   it {should have_many :invoices}
+
+#   describe "" do
+#     before(:each) do
+#     end
+#   end
+# end
 
