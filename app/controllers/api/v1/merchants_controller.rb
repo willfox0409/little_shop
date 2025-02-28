@@ -4,7 +4,7 @@ class Api::V1::MerchantsController < ApplicationController
         if params[:status] == "returned"
             merchants = Merchant.status_returned
         end
-        render json: MerchantSerializer.format_merchants(merchants)
+        render json: MerchantSerializer.format_merchants(merchants, params[:count])
     end
 
     def show
