@@ -11,9 +11,7 @@ class MerchantSerializer
           }
         }
       end,
-      meta: {
-        # count: merchants.length
-      }
+     
 
     }
   end
