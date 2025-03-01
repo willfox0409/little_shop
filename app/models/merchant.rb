@@ -1,7 +1,8 @@
 class Merchant < ApplicationRecord
   has_many :items
   has_many :invoices
-  # has_many_count :items
+  
+  validates :name, presence: true
 
   def self.sort_by_descending
     Merchant.order(created_at: :desc)
