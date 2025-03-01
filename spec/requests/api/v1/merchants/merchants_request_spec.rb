@@ -39,12 +39,12 @@ RSpec.describe "Merchants endpoints", type: :request do
   
       expect(response).to be_successful
       expect(merchants[:data].length).to eq(1)
-      expect(merchants[:data][0][:attributes][:name]).to eq("Billy's Bidets") # 👈 Only merchant1 should be returned
+      expect(merchants[:data][0][:attributes][:name]).to eq("Billy's Bidets") 
     end
   end
 
   describe "#show" do
-    it "can get a single record based on a merchant id" do
+    it "can get a single record based on a merchant id" do #Happy Path
       merchant1 = Merchant.create(name: "Billy's Bidets")
       
       get "/api/v1/merchants/#{merchant1.id}"
@@ -58,10 +58,19 @@ RSpec.describe "Merchants endpoints", type: :request do
       expect(merchant_data[:attributes]).to have_key(:name)
       expect(merchant_data[:attributes][:name]).to eq("Billy's Bidets")
     end
+
+    it "returns a 404 error if merchant is not found" do #Sad Path
+      get "/api/v1/merchants/999999"
+
+      error_response = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response.status).to eq(404)
+      expect(error_response[:errors][0][:message]).to eq("Couldn't find Merchant with 'id'=999999")
+    end
   end
 
   describe "#create" do
-    it "can create a merchant" do
+    it "can create a merchant" do #Happy Path
       merchant_params  = { name: "O'Houlihans" }
 
       headers = {"CONTENT_TYPE" => "application/json"}
@@ -73,6 +82,19 @@ RSpec.describe "Merchants endpoints", type: :request do
       expect(response).to be_successful
       expect(response.status).to eq(201)
       expect(created_merchant.name).to eq("O'Houlihans")
+    end
+
+    it "returns a 422 error if merchant name is missing" do
+      merchant_params = {} 
+      headers = { "CONTENT_TYPE" => "application/json" }
+
+      post "/api/v1/merchants", headers: headers, params: JSON.generate(merchant: merchant_params)
+
+      error_response = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response.status).to eq(422) 
+      expect(error_response[:errors]).to be_an(Array) 
+      expect(error_response[:errors][0][:message]).to eq("Name can't be blank") 
     end
   end
 
