@@ -84,7 +84,7 @@ RSpec.describe "Merchants endpoints", type: :request do
       expect(created_merchant.name).to eq("O'Houlihans")
     end
 
-    it "returns a 422 error if merchant name is missing" do
+    it "returns a 422 error if merchant name is missing" do # TEST IS NOT PASSING
       merchant_params = {} 
       headers = { "CONTENT_TYPE" => "application/json" }
 

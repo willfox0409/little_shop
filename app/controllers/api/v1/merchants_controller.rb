@@ -41,6 +41,6 @@ class Api::V1::MerchantsController < ApplicationController
     end
 
     def validation_error_response(exception)
-        render json: ErrorSerializer.new(exception.record.errors.full_messages.to_sentence, "404"), status: :invalid_request
+        render json: ErrorSerializer.new(exception.record.errors.full_messages.to_sentence, "422"), status: :invalid_request
     end
 end
