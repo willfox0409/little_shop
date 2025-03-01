@@ -32,13 +32,13 @@ RSpec.describe "Merchants endpoints", type: :request do
       get "/api/v1/merchants/#{id}"
 
       merchant = JSON.parse(response.body, symbolize_names: true)
-      merchantDAta = merchant[:data]
+      merchant_data = merchant[:data]
 
       expect(response).to be_successful
-      expect(merchantData).to have_key(:id)
-      expect(merchantData[:id]).to be_an(String)
-      expect(merchantData[:attributes]).to have_key(:name)
-      expect(merchantData[:attributes][:name]).to eq("Billy's Bidets")
+      expect(merchant_data).to have_key(:id)
+      expect(merchant_data[:id]).to be_an(String)
+      expect(merchant_data[:attributes]).to have_key(:name)
+      expect(merchant_data[:attributes][:name]).to eq("Billy's Bidets")
     end
   end
 
@@ -78,7 +78,14 @@ RSpec.describe "Merchants endpoints", type: :request do
 
   describe "#destroy" do
     it "can delete a select merchant" do
-      merchant = Merchant.create(name: "Shneebley's Insurance Co.")
+      merchant1 = Merchant.create(name: "Shneebley's Insurance Co.")
+      merchant1 = Merchant.create(name: "Jenny's One Stop Travel Shop")
+
+      expect(Merchant.all.length).to eq(2)
+
+      delete "/api/v1/items/#{merchant1.id}"
+
+      expect(Merchant.all.length).to eq(1)
     end
   end
 end
