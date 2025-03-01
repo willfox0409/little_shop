@@ -1,8 +1,17 @@
 require "rails_helper"
 
-RSpec.describe "Merchants endpoints" do
+RSpec.describe "Merchants endpoints", type: :request do
   describe "#index" do
-    it "" do
+    it "lists all merchants in the database" do
+
+      merchant = Merchant.create(
+        name: 
+      )
+
+
+
+
+
     end
   end
 
