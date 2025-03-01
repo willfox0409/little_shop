@@ -23,13 +23,31 @@ RSpec.describe "Merchants endpoints", type: :request do
         expect(merchant[:attributes][:name]).to be_a(String)
       end
     end
+
+    it "returns only merchants with returned invoices when status=returned is passed" do
+      merchant1 = Merchant.create(name: "Billy's Bidets")
+      merchant2 = Merchant.create(name: "Maria's Tacos")
+      
+      customer = Customer.create!(first_name: "Scoobert", last_name: "Doobert")
+
+      invoice1 = Invoice.create!(merchant: merchant1, customer: customer, status: "returned") 
+      invoice2 = Invoice.create!(merchant: merchant2, customer: customer, status: "shipped") 
+  
+      get "/api/v1/merchants?status=returned"
+  
+      merchants = JSON.parse(response.body, symbolize_names: true)
+  
+      expect(response).to be_successful
+      expect(merchants[:data].length).to eq(1)
+      expect(merchants[:data][0][:attributes][:name]).to eq("Billy's Bidets") # 👈 Only merchant1 should be returned
+    end
   end
 
   describe "#show" do
     it "can get a single record based on a merchant id" do
       merchant1 = Merchant.create(name: "Billy's Bidets")
       
-      get "/api/v1/merchants/#{id}"
+      get "/api/v1/merchants/#{merchant1.id}"
 
       merchant = JSON.parse(response.body, symbolize_names: true)
       merchant_data = merchant[:data]
@@ -52,7 +70,7 @@ RSpec.describe "Merchants endpoints", type: :request do
 
       created_merchant = Merchant.last
 
-      expect(response).to_be_successful
+      expect(response).to be_successful
       expect(response.status).to eq(201)
       expect(created_merchant.name).to eq("O'Houlihans")
     end
@@ -79,11 +97,11 @@ RSpec.describe "Merchants endpoints", type: :request do
   describe "#destroy" do
     it "can delete a select merchant" do
       merchant1 = Merchant.create(name: "Shneebley's Insurance Co.")
-      merchant1 = Merchant.create(name: "Jenny's One Stop Travel Shop")
+      merchant2 = Merchant.create(name: "Jenny's One Stop Travel Shop")
 
       expect(Merchant.all.length).to eq(2)
 
-      delete "/api/v1/items/#{merchant1.id}"
+      delete "/api/v1/merchants/#{merchant1.id}"
 
       expect(Merchant.all.length).to eq(1)
     end
