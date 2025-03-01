@@ -1,4 +1,7 @@
 class Api::V1::MerchantsController < ApplicationController
+    rescue_from ActiveRecord::RecordNotFound, with: :not_found_response
+    rescue_from ActiveRecord::RecordInvalid, with: :validation_error_response
+
     def index
         merchants = Merchant.sort_by_descending
         if params[:status] == "returned"
@@ -31,5 +34,13 @@ class Api::V1::MerchantsController < ApplicationController
 
     def merchant_params
         params.require(:merchant).permit(:name)
+    end
+
+    def not_found_response(exception)
+        render json: ErrorSerializer.new(exception.message, "404"), status: :not_found
+    end
+
+    def validation_error_response(exception)
+        render json: ErrorSerializer.new(exception.record.errors.full_messages.to_sentence, "404"), status: :invalid_request
     end
 end
