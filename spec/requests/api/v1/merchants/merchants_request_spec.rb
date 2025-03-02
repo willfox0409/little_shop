@@ -75,6 +75,8 @@ RSpec.describe "Merchants endpoints", type: :request do
 
       headers = {"CONTENT_TYPE" => "application/json"}
 
+      puts "Sending POST request with params: #{JSON.generate(merchant_params)}"
+
       post "/api/v1/merchants", headers: headers, params: JSON.generate(merchant: merchant_params)
 
       created_merchant = Merchant.last
@@ -85,10 +87,12 @@ RSpec.describe "Merchants endpoints", type: :request do
     end
 
     it "returns a 422 error if merchant name is missing" do # TEST IS NOT PASSING
-      merchant_params = {} 
+      merchant_params = { "merchant": {} } 
       headers = { "CONTENT_TYPE" => "application/json" }
 
       post "/api/v1/merchants", headers: headers, params: JSON.generate(merchant: merchant_params)
+
+      puts "Recieved response: #{response.body}"
 
       error_response = JSON.parse(response.body, symbolize_names: true)
 
