@@ -24,6 +24,19 @@ RSpec.describe "Merchants endpoints", type: :request do
       end
     end
 
+    it "includes item_count when count=true is passed" do 
+      merchant = Merchant.create!(name: "De Niro's cigars")
+      10.times { Item.create!(name: "Cigarillos", merchant: merchant) }
+
+      get "/api/v1/merchants?count=true"
+
+      merchants = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response).to be_successful
+      expect(merchants[:data][0][:attributes]).to have_key(:item_count) 
+      expect(merchants[:data][0][:attributes][:item_count]).to eq(10)
+    end
+
     it "returns only merchants with returned invoices when status=returned is passed" do
       merchant1 = Merchant.create(name: "Billy's Bidets")
       merchant2 = Merchant.create(name: "Maria's Tacos")
