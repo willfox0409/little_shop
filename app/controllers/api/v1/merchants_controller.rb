@@ -16,17 +16,19 @@ class Api::V1::MerchantsController < ApplicationController
     end
 
     def create
-        merchant = Merchant.create(merchant_params)
+        merchant = Merchant.create!(merchant_params)
         render json: MerchantSerializer.format_single(merchant), status: :created
     end
 
     def update
-        merchant = Merchant.update(params[:id], merchant_params)
+        merchant = Merchant.find(params[:id])
+        merchant.update!(merchant_params)
         render json: MerchantSerializer.format_single(merchant)
     end
 
     def destroy
-        Merchant.delete(params[:id])
+        merchant = Merchant.find(params[:id])
+        merchant.destroy
         render json: { message: "Merchant deleted successfully" }, status: :no_content
     end
 
@@ -41,6 +43,6 @@ class Api::V1::MerchantsController < ApplicationController
     end
 
     def validation_error_response(exception)
-        render json: ErrorSerializer.new(exception.record.errors.full_messages.to_sentence, "422"), status: :invalid_request
+        render json: ErrorSerializer.new(exception.record.errors.full_messages.to_sentence, "422"), status: :unprocessable_entity
     end
 end
