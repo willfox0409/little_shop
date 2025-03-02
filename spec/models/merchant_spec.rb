@@ -34,7 +34,32 @@ RSpec.describe Merchant, type: :model do
     end
   end
 
+  describe "with_status" do
+    it "returns merchants with invoices matching the requested status" do
+      merchant1 = Merchant.create!(name: "Shipped Merchant")
+      merchant2 = Merchant.create!(name: "Returned Merchant")
+      merchant3 = Merchant.create!(name: "Packaged Merchant")
   
+      customer = Customer.create!(first_name: "Phillip", last_name: "Seymour-Hoffman")
+  
+      Invoice.create!(merchant: merchant1, customer: customer, status: "shipped")
+      Invoice.create!(merchant: merchant2, customer: customer, status: "returned")
+      Invoice.create!(merchant: merchant3, customer: customer, status: "packaged")
+  
+      expect(Merchant.with_status("shipped")).to include(merchant1)
+      expect(Merchant.with_status("returned")).to include(merchant2)
+      expect(Merchant.with_status("packaged")).to include(merchant3)
+    end
+  end
+
+  describe "item_count" do
+    it "returns the total count of items for a merchant" do
+      merchant = Merchant.create!(name: "Ruby Boozedays")
+      5.times { Item.create!(name: "Schlitz", merchant: merchant) }
+
+      expect(merchant.item_count).to eq(5)
+    end
+  end
 end
 
 
