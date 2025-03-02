@@ -16,8 +16,5 @@ class Merchant < ApplicationRecord
   def item_count
     items.count
   end
-
-  # scope :sort_by_descending, -> { order(created_at: :desc) }
-  # scope :status_returned, -> { joins(:invoices).where(invoices: {status: "returned"})}
 end
 
