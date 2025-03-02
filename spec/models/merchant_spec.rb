@@ -50,6 +50,14 @@ RSpec.describe Merchant, type: :model do
       expect(Merchant.with_status("returned")).to include(merchant2)
       expect(Merchant.with_status("packaged")).to include(merchant3)
     end
+
+    it "returns an empty ActiveRecord relation when an invalid status is given" do # Edge Case
+      merchant = Merchant.create!(name: "Bad Status Merchant")
+      customer = Customer.create!(first_name: "Paul", last_name: "Thomas-Anderson")
+    
+      Invoice.create!(merchant: merchant, customer: customer, status: "shipped")
+    
+      expect(Merchant.with_status("nonexistent")).to be_empty 
   end
 
   describe "item_count" do
@@ -64,6 +72,10 @@ RSpec.describe Merchant, type: :model do
       merchant = Merchant.create!(name: "Abracadabra's Bunnies")
     
       expect(merchant.item_count).to eq(0) 
+    end
+
+    it "raises an error when calling item_count on a non-existent merchant ID" do # Sad Path
+      expect { Merchant.find(999999).item_count }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
 end
