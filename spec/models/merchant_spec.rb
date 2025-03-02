@@ -5,6 +5,7 @@ RSpec.describe Merchant, type: :model do
     it { should have_many(:items) }
     it { should have_many(:invoices) }
   end
+  
   it "has many items" do
     merchant = Merchant.create!(name: "Store A")
     item = Item.create!(name: "Product 1", unit_price: 10, merchant: merchant)

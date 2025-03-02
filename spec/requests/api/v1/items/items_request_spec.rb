@@ -110,26 +110,6 @@ RSpec.describe "Item endpoints", type: :request do
     end
   end
 
-  describe "DELETE /items/:id" do
-    it 'can delete a select item' do
-      merchant = Merchant.create(name: "Jaben Witherspank")
-      item = Item.create(name: "Glue Stick", description: "Strong Adhevise", unit_price: 4.99, merchant_id: merchant.id)
-      item2 = Item.create(name: "Balloon", description: "Full of Air", unit_price: 1.75, merchant_id: merchant.id)
-      # customer = Customer.create(first_name: "Wes", last_name: "Westerson")
-      # invoice = Invoice.create(customer_id: customer.id, merchant_id: merchant.id, status: "sent")
-      # invoice_item = InvoiceItem.create(item_id: item.id, invoice_id: invoice.id, quantity: 1, unit_price: item.unit_price)
-
-      expect(Item.all.length).to eq(2)
-
-      # invoice_item.destroy
-
-      delete "/api/v1/items/#{item.id}"
-
-      expect(Item.all.length).to eq(1)
-      # expect { Item.find(item.id) }.to raise_error(ActiveRecord::RecordNotFound) Will eventually happen ahead of time with error handling
-    end
-  end
-
   describe "#update" do
     it 'can update the item' do
       merchant = Merchant.create(name: 'Bart')
@@ -151,14 +131,27 @@ RSpec.describe "Item endpoints", type: :request do
   end
 end
 
+  describe "DELETE /items/:id" do
+    it 'can delete a select item' do
+      merchant = Merchant.create(name: "Jaben Witherspank")
+      item = Item.create(name: "Glue Stick", description: "Strong Adhevise", unit_price: 4.99, merchant_id: merchant.id)
+      item2 = Item.create(name: "Balloon", description: "Full of Air", unit_price: 1.75, merchant_id: merchant.id)
+      # customer = Customer.create(first_name: "Wes", last_name: "Westerson")
+      # invoice = Invoice.create(customer_id: customer.id, merchant_id: merchant.id, status: "sent")
+      # invoice_item = InvoiceItem.create(item_id: item.id, invoice_id: invoice.id, quantity: 1, unit_price: item.unit_price)
 
+      expect(Item.all.length).to eq(2)
 
+      # invoice_item.destroy
 
+      delete "/api/v1/items/#{item.id}"
 
+      expect(Item.all.length).to eq(1)
+      # expect { Item.find(item.id) }.to raise_error(ActiveRecord::RecordNotFound) Will eventually happen ahead of time with error handling
+    end
+  end
 
-
-
-
+  
 # RSpec.describe "Items endpoints" do
 #   describe "#index" do
 #     it "" do
