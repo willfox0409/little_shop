@@ -4,8 +4,8 @@ class Api::V1::MerchantsController < ApplicationController
 
     def index
         merchants = Merchant.sort_by_descending
-        if params[:status] == "returned"
-            merchants = Merchant.status_returned
+        if params[:status].present? 
+            merchants = Merchant.with_status(params[:status])
         end
         render json: MerchantSerializer.format_merchants(merchants, params[:count])
     end
