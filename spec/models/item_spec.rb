@@ -20,6 +20,12 @@ RSpec.describe Item, type: :model do
 
     expect(item.invoice_items).to include(invoice_item)
   end
+
+  describe "#find_merchants_items" do
+    it "can return can return the items for a merchant" do
+      expect()
+    end
+  end
 end
 
 
