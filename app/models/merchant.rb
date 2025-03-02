@@ -8,9 +8,10 @@ class Merchant < ApplicationRecord
     Merchant.order(created_at: :desc)
   end
   
-  def self.status_returned
+  def self.with_status(status)
+    return none unless ["shipped", "packaged", "returned"].include?(status)
     Merchant.joins(:invoices)
-    .where(invoices: {status: "returned"})
+    .where(invoices: {status: status})
   end
 
   def item_count
