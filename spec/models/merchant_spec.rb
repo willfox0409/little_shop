@@ -58,6 +58,7 @@ RSpec.describe Merchant, type: :model do
       Invoice.create!(merchant: merchant, customer: customer, status: "shipped")
     
       expect(Merchant.with_status("nonexistent")).to be_empty 
+    end
   end
 
   describe "item_count" do
