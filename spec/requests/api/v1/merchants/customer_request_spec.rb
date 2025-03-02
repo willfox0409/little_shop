@@ -53,4 +53,3 @@ RSpec.describe "Find Merchants/Items endpoint", type: :request do
     end
   end
 end
-
