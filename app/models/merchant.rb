@@ -1,7 +1,6 @@
 class Merchant < ApplicationRecord
   has_many :items
   has_many :invoices
-  # has_many_count :items
 
   def self.sort_by_descending
     Merchant.order(created_at: :desc)
@@ -10,6 +9,10 @@ class Merchant < ApplicationRecord
   def self.status_returned
     Merchant.joins(:invoices)
     .where(invoices: {status: "returned"})
+  end
+
+  def self.find_merchant(merchant_param)
+    find_by_sql(["SELECT * FROM merchants WHERE name ILIKE ?", "%#{merchant_param}%"]).first
   end
 
   def item_count
