@@ -20,19 +20,21 @@ RSpec.describe Merchant, type: :model do
     expect(merchant.invoices).to include(invoice)
   end
 
-  # describe "::sort_by_descending" do
-  #   before(:each) do
-  #   end
-  # end
+  describe "sort_by_descending" do
+    it "returns merchants in descending order by created_at" do
+      merchant1 = Merchant.create!(name: "Old Merchant Willie", created_at: 2.days.ago)
+      merchant2 = Merchant.create!(name: "New Merchant Josie", created_at: 1.day.ago)
+  
+      sorted_merchants = Merchant.sort_by_descending
+  
+      expect(sorted_merchants.first).to eq(merchant2)
+      expect(sorted_merchants.first.name).to eq("New Merchant Josie")
+      expect(sorted_merchants.last).to eq(merchant1)
+      expect(sorted_merchants.last.name).to eq("Old Merchant Willie")
+    end
+  end
 
-  # describe "::status_returned" do
-  #   before(:each) do
-  #   end
-  # end
-
-  # describe "#item_count" do
-  #   before(:each) do
-  #   end
-  # end
+  
 end
+
 
