@@ -57,7 +57,7 @@ RSpec.describe "Merchants endpoints", type: :request do
   end
 
   describe "#show" do
-    it "can get a single record based on a merchant id" do #Happy Path
+    it "can get a single record based on a merchant id" do 
       merchant1 = Merchant.create(name: "Billy's Bidets")
       
       get "/api/v1/merchants/#{merchant1.id}"
@@ -72,7 +72,7 @@ RSpec.describe "Merchants endpoints", type: :request do
       expect(merchant_data[:attributes][:name]).to eq("Billy's Bidets")
     end
 
-    it "returns a 404 error if merchant is not found" do #Sad Path
+    it "returns a 404 error if merchant is not found" do # Sad Path
       get "/api/v1/merchants/999999"
 
       error_response = JSON.parse(response.body, symbolize_names: true)
@@ -83,7 +83,7 @@ RSpec.describe "Merchants endpoints", type: :request do
   end
 
   describe "#create" do
-    it "can create a merchant" do #Happy Path
+    it "can create a merchant" do 
       merchant_params  = { name: "O'Houlihans" }
 
       headers = {"CONTENT_TYPE" => "application/json"}
@@ -99,7 +99,7 @@ RSpec.describe "Merchants endpoints", type: :request do
       expect(created_merchant.name).to eq("O'Houlihans")
     end
 
-    it "returns a 422 error if merchant name is missing" do # TEST IS NOT PASSING
+    it "returns a 422 error if merchant name is missing" do # Sad Path
       merchant_params = { "merchant": {} } 
       headers = { "CONTENT_TYPE" => "application/json" }
 
