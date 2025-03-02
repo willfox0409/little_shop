@@ -59,6 +59,12 @@ RSpec.describe Merchant, type: :model do
 
       expect(merchant.item_count).to eq(5)
     end
+
+    it "returns 0 if the merchant has no items and not nil" do # Edge Case
+      merchant = Merchant.create!(name: "Abracadabra's Bunnies")
+    
+      expect(merchant.item_count).to eq(0) 
+    end
   end
 end
 
