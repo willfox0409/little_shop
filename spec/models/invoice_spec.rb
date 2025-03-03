@@ -36,6 +36,12 @@ RSpec.describe Invoice, type: :model do
     expect(invoice.transactions).to include(transaction)
   end
 
+  describe "::find_merchants_customers" do
+    it "can find the cutomers of a given merchant" do
+      expect
+
+    end
+  end
 end
 
 
