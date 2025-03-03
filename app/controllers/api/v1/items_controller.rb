@@ -3,7 +3,11 @@ class Api::V1::ItemsController < ApplicationController
     rescue_from ActiveRecord::RecordInvalid, with: :validation_error_response
 
     def index
-        items = Item.all
+        if params[:sorted] == "price" 
+            items = Item.sorted_by_price
+        else
+            items = Item.all
+        end
         render json: ItemSerializer.format_items(items)
     end
 

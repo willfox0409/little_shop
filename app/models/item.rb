@@ -26,6 +26,10 @@ class Item < ApplicationRecord
   def self.find_by_name(name)
     find_by_sql(["SELECT * FROM items WHERE name ILIKE ?", "%#{name}%"])
   end
+
+  def self.sorted_by_price
+    order(:unit_price)
+  end
   
   validates :name, presence: true
   validates :description, presence: true
