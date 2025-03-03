@@ -52,4 +52,10 @@ RSpec.describe "Find Merchants/Items endpoint", type: :request do
       expect(item[:attributes][:merchant_id]).to be_an(Integer)
     end
   end
+
+  it "returns 404 for a bad integer id" do
+    get "/api/v1/merchants/#{@merchant.id}/items)", params: {}
+
+    expect(response).to have_http_status(404) 
+  end
 end
