@@ -129,9 +129,8 @@ RSpec.describe "Item endpoints", type: :request do
       expect(item.unit_price).to eq(25.00)
     end
   end
-end
 
-  describe "DELETE /items/:id" do
+  describe "#destroy" do
     it 'can delete a select item' do
       merchant = Merchant.create(name: "Jaben Witherspank")
       item = Item.create(name: "Glue Stick", description: "Strong Adhevise", unit_price: 4.99, merchant_id: merchant.id)
@@ -150,31 +149,7 @@ end
       # expect { Item.find(item.id) }.to raise_error(ActiveRecord::RecordNotFound) Will eventually happen ahead of time with error handling
     end
   end
+end
 
   
-# RSpec.describe "Items endpoints" do
-#   describe "#index" do
-#     it "" do
-#     end
-#   end
 
-#   describe "#show" do
-#     it "" do
-#     end
-#   end
-
-#   describe "#create" do
-#     it "" do
-#     end
-#   end
-
-#   describe "#update" do
-#     it "" do
-#     end
-#   end
-
-#   describe "#destroy" do
-#     it "" do
-#     end
-#   end
-# end
