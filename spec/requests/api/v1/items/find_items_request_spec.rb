@@ -83,6 +83,7 @@ RSpec.describe "Find Items endpoint", type: :request do
     expect(items[:data].first[:attributes][:unit_price]).to eq(50.00)
   end
 
+  #TODO Error handler
   it "returns an error when no parameters are provided" do
     get "/api/v1/items/find_all"
 
