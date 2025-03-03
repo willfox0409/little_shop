@@ -4,30 +4,30 @@ RSpec.describe "Item endpoints", type: :request do
   describe '#index' do
     it 'lists all items in the database' do
       
-      merchant = Merchant.create(name: 'Merchant1')
+      merchant = Merchant.create!(name: 'Merchant1')
 
-      item = Item.create(
+      item = Item.create!(
         name: "Baseball Bat",
         description: "it swings fast",
         unit_price: 19.99,
         merchant_id: merchant.id
       )
 
-      item2 = Item.create(
+      item2 = Item.create!(
         name: "Chocolate Bunny",
         description: "it tastes okay",
         unit_price: 3.00,
         merchant_id: merchant.id
       )
 
-      item3 = Item.create(
+      item3 = Item.create!(
         name: "Wagon Wheel",
         description: "it rolls funny",
         unit_price: 70.50,
         merchant_id: merchant.id
       )
 
-      item4 = Item.create(
+      item4 = Item.create!(
         name: "Wood Table",
         description: "Pure wood",
         unit_price: 700.00,
@@ -57,8 +57,8 @@ RSpec.describe "Item endpoints", type: :request do
   
   describe "#show" do
     it 'can get a single record based upon item id' do
-      merchant_id = Merchant.create(name: "Carlos Danger").id
-      id = Item.create(name: "Basketball Hoop", description: "Regulation Height", 
+      merchant_id = Merchant.create!(name: "Carlos Danger").id
+      id = Item.create!(name: "Basketball Hoop", description: "Regulation Height", 
       unit_price: 225.00, merchant_id: merchant_id).id.to_s
 
       get "/api/v1/items/#{id}"
@@ -112,8 +112,8 @@ RSpec.describe "Item endpoints", type: :request do
 
   describe "#update" do
     it 'can update the item' do
-      merchant = Merchant.create(name: 'Bart')
-      item = Item.create(name: 'Cattle Prod', description: 'Pokey Stick', unit_price: 25.00, merchant_id: merchant.id)
+      merchant = Merchant.create!(name: 'Bart')
+      item = Item.create!(name: 'Cattle Prod', description: 'Pokey Stick', unit_price: 25.00, merchant_id: merchant.id)
 
       id = item.id
       previous_name = item.name
@@ -129,13 +129,12 @@ RSpec.describe "Item endpoints", type: :request do
       expect(item.unit_price).to eq(25.00)
     end
   end
-end
 
-  describe "DELETE /items/:id" do
+  describe "#destroy" do
     it 'can delete a select item' do
-      merchant = Merchant.create(name: "Jaben Witherspank")
-      item = Item.create(name: "Glue Stick", description: "Strong Adhevise", unit_price: 4.99, merchant_id: merchant.id)
-      item2 = Item.create(name: "Balloon", description: "Full of Air", unit_price: 1.75, merchant_id: merchant.id)
+      merchant = Merchant.create!(name: "Jaben Witherspank")
+      item = Item.create!(name: "Glue Stick", description: "Strong Adhevise", unit_price: 4.99, merchant_id: merchant.id)
+      item2 = Item.create!(name: "Balloon", description: "Full of Air", unit_price: 1.75, merchant_id: merchant.id)
       # customer = Customer.create(first_name: "Wes", last_name: "Westerson")
       # invoice = Invoice.create(customer_id: customer.id, merchant_id: merchant.id, status: "sent")
       # invoice_item = InvoiceItem.create(item_id: item.id, invoice_id: invoice.id, quantity: 1, unit_price: item.unit_price)
@@ -150,31 +149,5 @@ end
       # expect { Item.find(item.id) }.to raise_error(ActiveRecord::RecordNotFound) Will eventually happen ahead of time with error handling
     end
   end
+end
 
-  
-# RSpec.describe "Items endpoints" do
-#   describe "#index" do
-#     it "" do
-#     end
-#   end
-
-#   describe "#show" do
-#     it "" do
-#     end
-#   end
-
-#   describe "#create" do
-#     it "" do
-#     end
-#   end
-
-#   describe "#update" do
-#     it "" do
-#     end
-#   end
-
-#   describe "#destroy" do
-#     it "" do
-#     end
-#   end
-# end
