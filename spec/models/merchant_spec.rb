@@ -24,6 +24,12 @@ RSpec.describe Merchant, type: :model do
     expect(merchant.invoices).to include(invoice)
   end
 
+  describe "::find_merchant" do
+    it "can find a merchant that contains the text snippet in their name" do
+    end
+  end
+
+
   describe "sort_by_descending" do
     it "returns merchants in descending order by created_at" do
       merchant1 = Merchant.create!(name: "Old Merchant Willie", created_at: 2.days.ago)
