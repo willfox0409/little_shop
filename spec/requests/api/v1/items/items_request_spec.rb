@@ -123,16 +123,12 @@ RSpec.describe "Item endpoints", type: :request do
       expect(itemData).to have_key(:id)
       expect(itemData[:id]).to be_an(String)
       expect(itemData[:attributes]).to have_key(:name)
-      # expect(itemData[:attributes][:name]).to be_a(String)
       expect(itemData[:attributes][:name]).to eq('Basketball Hoop')
       expect(itemData[:attributes]).to have_key(:description)
-      # expect(itemData[:attributes][:description]).to be_a(String)
       expect(itemData[:attributes][:description]).to eq('Regulation Height')
       expect(itemData[:attributes]).to have_key(:unit_price)
-      # expect(itemData[:attributes][:unit_price]).to be_a(Float)
       expect(itemData[:attributes][:unit_price]).to eq(225.00)
       expect(itemData[:attributes]).to have_key(:merchant_id)
-      # expect(itemData[:attributes][:merchant_id]).to be_a(Integer)
       expect(itemData[:attributes][:merchant_id]).to eq(merchant_id)
     end
   end
@@ -194,7 +190,6 @@ RSpec.describe "Item endpoints", type: :request do
       delete "/api/v1/items/#{item.id}"
 
       expect(Item.all.length).to eq(1)
-
     end
   end
 end
