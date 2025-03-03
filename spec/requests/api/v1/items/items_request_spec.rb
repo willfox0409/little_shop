@@ -131,6 +131,24 @@ RSpec.describe "Item endpoints", type: :request do
       expect(itemData[:attributes]).to have_key(:merchant_id)
       expect(itemData[:attributes][:merchant_id]).to eq(merchant_id)
     end
+
+      it "returns a 404 error if item ID does not exist" do #Sad Path
+        get "/api/v1/items/999999"
+    
+        error_response = JSON.parse(response.body, symbolize_names: true)
+    
+        expect(response.status).to eq(404)
+        expect(error_response[:errors][0][:message]).to eq("Couldn't find Item with 'id'=999999")
+      end
+    
+      it "returns a 404 error if item ID is a string" do # Edge Case 
+        get "/api/v1/items/not_an_id"
+    
+        error_response = JSON.parse(response.body, symbolize_names: true)
+    
+        expect(response.status).to eq(404)
+        expect(error_response[:errors][0][:message]).to include("Couldn't find Item")
+      end
   end
   
   describe "#create" do
@@ -177,6 +195,15 @@ RSpec.describe "Item endpoints", type: :request do
       expect(item.name).to eq('Moving Rod')
       expect(item.unit_price).to eq(25.00)
     end
+
+    it "returns a 404 error if item ID does not exist" do #Sad Path
+      get "/api/v1/items/999999"
+  
+      error_response = JSON.parse(response.body, symbolize_names: true)
+  
+      expect(response.status).to eq(404)
+      expect(error_response[:errors][0][:message]).to eq("Couldn't find Item with 'id'=999999")
+    end
   end
 
   describe "#destroy" do
@@ -190,6 +217,15 @@ RSpec.describe "Item endpoints", type: :request do
       delete "/api/v1/items/#{item.id}"
 
       expect(Item.all.length).to eq(1)
+    end
+
+    it "returns a 404 error if item ID does not exist" do #Sad Path
+      get "/api/v1/items/999999"
+  
+      error_response = JSON.parse(response.body, symbolize_names: true)
+  
+      expect(response.status).to eq(404)
+      expect(error_response[:errors][0][:message]).to eq("Couldn't find Item with 'id'=999999")
     end
   end
 end
