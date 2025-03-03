@@ -5,6 +5,7 @@ RSpec.describe Item, type: :model do
     it { should belong_to(:merchant) }
     it { should have_many(:invoice_items) }
   end
+  
   it "belongs to a merchant" do
     merchant = Merchant.create!(name: "Store A")
     item = Item.create!(name: "Product 1", description: "banana", unit_price: 10, merchant: merchant)
@@ -22,21 +23,4 @@ RSpec.describe Item, type: :model do
   end
 end
 
-
-
-
-
-
-
-
-# RSpec.describe Item, type: :model do
-#   it {should belong_to :merchant}
-
-#   it {should has_many :invoice_items}
-
-#   describe "" do
-#     before(:each) do
-#     end
-#   end
-# end
 
