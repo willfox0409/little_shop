@@ -4,11 +4,11 @@ RSpec.describe "Merchants endpoints", type: :request do
   describe "#index" do
     it "lists all merchants in the database" do
 
-      merchant1 = Merchant.create(name: "Billy's Bidets")
+      merchant1 = Merchant.create!(name: "Billy's Bidets")
 
-      merchant2 = Merchant.create(name: "Maria's Tacos")
+      merchant2 = Merchant.create!(name: "Maria's Tacos")
       
-      merchant3 = Merchant.create(name: "Johnny's Punk-Cuts")
+      merchant3 = Merchant.create!(name: "Johnny's Punk-Cuts")
 
       get "/api/v1/merchants"
 
@@ -26,7 +26,7 @@ RSpec.describe "Merchants endpoints", type: :request do
 
     it "includes item_count when count=true is passed" do 
       merchant = Merchant.create!(name: "De Niro's cigars")
-      10.times { Item.create!(name: "Cigarillos", merchant: merchant) }
+      10.times { Item.create!(name: "Cigarillos", description: "stogies", unit_price: 7, merchant: merchant) }
 
       get "/api/v1/merchants?count=true"
 
