@@ -5,16 +5,20 @@ RSpec.describe Merchant, type: :model do
     it { should have_many(:items) }
     it { should have_many(:invoices) }
   end
+
+  describe "validations" do 
+    it { should validate_presence_of :name }
+  end
   
   it "has many items" do
-    merchant = Merchant.create!(name: "Store A")
-    item = Item.create!(name: "Product 1", unit_price: 10, merchant: merchant)
+    merchant = Merchant.create!(name: "Toys R Us")
+    item = Item.create!(name: "Jenga", description: "boardgame", unit_price: 10, merchant: merchant)
 
     expect(merchant.items).to include(item)
   end
 
   it "has many invoices" do
-    merchant = Merchant.create!(name: "Store A")
+    merchant = Merchant.create!(name: "Toys R Us")
     invoice = Invoice.create!(customer: Customer.create!(first_name: "John", last_name: "Doe"), merchant: merchant, status: "paid")
 
     expect(merchant.invoices).to include(invoice)
@@ -64,7 +68,7 @@ RSpec.describe Merchant, type: :model do
   describe "item_count" do
     it "returns the total count of items for a merchant" do
       merchant = Merchant.create!(name: "Ruby Boozedays")
-      5.times { Item.create!(name: "Schlitz", merchant: merchant) }
+      5.times { Item.create!(name: "Schlitz", description: "beer", unit_price: 2, merchant: merchant) }
 
       expect(merchant.item_count).to eq(5)
     end
