@@ -1,6 +1,5 @@
 class Item < ApplicationRecord
   belongs_to :merchant 
-
   has_many :invoice_items
 
   def self.find_merchants_items(merchant_id)
@@ -27,4 +26,9 @@ class Item < ApplicationRecord
   def self.find_by_name(name)
     find_by_sql(["SELECT * FROM items WHERE name ILIKE ?", "%#{name}%"])
   end
+  
+  validates :name, presence: true
+  validates :description, presence: true
+  validates :unit_price, presence: true, numericality: { greater_than: 0 }
+  validates :merchant_id, presence: true
 end
