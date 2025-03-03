@@ -9,7 +9,7 @@ class Item < ApplicationRecord
 
   def self.find_items_merchant(item_id)
     merchants = find_by_sql(["SELECT merchant_id FROM items WHERE id = ?", item_id]).pluck(:merchant_id)
-    find_by_sql(["SELECT * FROM merchants WHERE id IN (?)", merchants])
+    Merchant.find_by_sql(["SELECT * FROM merchants WHERE id IN (?)", merchants])
   end
 
   def self.full_price(min_price, max_price)
