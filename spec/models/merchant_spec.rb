@@ -19,6 +19,10 @@ RSpec.describe Merchant, type: :model do
     expect(merchant.invoices).to include(invoice)
   end
 
+  describe "::find_merchant" do
+    it "can find a merchant that contains the text snippet in their name" do
+    end
+  end
   # describe "::sort_by_descending" do
   #   before(:each) do
   #   end
