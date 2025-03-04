@@ -5,8 +5,12 @@ class Invoice < ApplicationRecord
   has_many :invoice_items
   has_many :transactions
 
-  def self.find_merchants_invoices(merchant_id)
-    x = where(merchant_id: merchant_id)
+  def self.find_merchants_invoices(merchant_id, status)
+    if status == nil
+      self.where(merchant_id: merchant_id)
+    else
+      self.where(merchant_id: merchant_id, status: status)
+    end
   end
 
   def self.find_merchants_customers(merchant_id)

@@ -29,4 +29,10 @@ class MerchantSerializer
       }
     }
   end
+
+  def self.no_merchant
+    return { data: {
+       } 
+    }
+  end
 end

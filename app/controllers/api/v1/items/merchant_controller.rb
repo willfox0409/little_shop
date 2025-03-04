@@ -1,6 +1,11 @@
 class Api::V1::Items::MerchantController < ApplicationController
   def show
-    merchant_items = Item.find_items_merchant(params[:id])
-    render json: MerchantSerializer.format_merchants(merchant_items, false)
+    items_merchant = Item.find_items_merchant(params[:id])
+
+    if items_merchant.present?
+      render json: MerchantSerializer.format_single(items_merchant)
+    else
+      render json: { error: 'Merchant not found' }, status: :not_found
+    end
   end
 end

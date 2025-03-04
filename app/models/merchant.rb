@@ -11,7 +11,7 @@ class Merchant < ApplicationRecord
   def self.with_status(status)
     return none unless ["shipped", "packaged", "returned"].include?(status)
     Merchant.joins(:invoices)
-    .where(invoices: {status: status})
+    where(invoices: {status: status})
   end
 
   def self.find_merchant(merchant_param)
@@ -22,4 +22,3 @@ class Merchant < ApplicationRecord
     items.count
   end
 end
-

@@ -12,8 +12,9 @@ class Item < ApplicationRecord
   end
 
   def self.find_items_merchant(item_id)
-    merchant_id = find(item_id).merchant_id
-    Merchant.where(id: merchant_id)
+    merchant_id = where(id: item_id).pluck(:merchant_id)
+    # merchant_id = find(item_id).merchant_id
+    Merchant.where(id: merchant_id).first
   end
 
   def self.full_price(min_price, max_price)

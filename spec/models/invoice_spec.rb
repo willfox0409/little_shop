@@ -1,12 +1,17 @@
 require "rails_helper"
 
 RSpec.describe Invoice, type: :model do
-  describe "relationships" do
+  describe "has relationships" do
     it { should belong_to(:customer) }
     it { should belong_to(:merchant) }
     it { should have_many(:invoice_items) }
     it { should have_many(:transactions) }
   end
+  
+  # describe "validations" do
+  #   it { should validate_presence_of(:status) }
+  # end
+  
   it "belongs to a customer" do
     customer = Customer.create!(first_name: "John", last_name: "Doe")
     invoice = Invoice.create!(customer: customer, merchant: Merchant.create!(name: "Store A"), status: "paid")
@@ -23,49 +28,65 @@ RSpec.describe Invoice, type: :model do
 
   it "has many invoice items" do
     invoice = Invoice.create!(customer: Customer.create!(first_name: "John", last_name: "Doe"), merchant: Merchant.create!(name: "Store A"), status: "paid")
-    item = Item.create!(name: "Product 1", unit_price: 10, merchant: Merchant.create!(name: "Store A"))
+    item = Item.create!(name: "Product 1", description: "product", unit_price: 10, merchant: Merchant.create!(name: "Store A"))
     invoice_item = InvoiceItem.create!(invoice: invoice, item: item, quantity: 2, unit_price: 10)
 
     expect(invoice.invoice_items).to include(invoice_item)
   end
 
   it "has many transactions" do
-    invoice = Invoice.create!(customer: Customer.create!(first_name: "John", last_name: "Doe"), merchant: Merchant.create!(name: "Store A"), status: "paid")
+    merchant = Merchant.create!(name: "Store A")
+    invoice = Invoice.create!(customer: Customer.create!(first_name: "John", last_name: "Doe"), merchant: merchant , status: "paid")
     transaction = Transaction.create!(invoice: invoice, credit_card_number: "1234", credit_card_expiration_date: "12/25", result: "success")
 
     expect(invoice.transactions).to include(transaction)
   end
 
-  describe "::find_merchants_customers" do
-    it "can find the cutomers of a given merchant" do
-      expect
+  describe "::find_merchants_invoices" do
+    before(:each) do
+      @merchant = Merchant.create!(name: "Store A")
+      @customer = Customer.create!(first_name: "John", last_name: "Doe")
+      @invoice1 = Invoice.create!(customer: @customer, merchant: @merchant, status: "paid") 
+      @invoice2 = Invoice.create!(customer: @customer, merchant: @merchant, status: "pending") 
+      @invoice3 = Invoice.create!(customer: @customer, merchant: @merchant, status: "shipped") 
+      @other_merchant_invoice = Invoice.create!(customer: @customer, merchant: Merchant.create!(name: "Other Store"), status: "paid")
+    end
 
+    it "can find the invoices of a given merchant with no status" do
+      expect(Invoice.find_merchants_invoices(@merchant.id, nil)).to contain_exactly(@invoice1, @invoice2, @invoice3)
+    end
+
+    it "can find the invoices of a given merchant with status" do
+      expect(Invoice.find_merchants_invoices(@merchant.id, "paid")).to contain_exactly(@invoice1)
+      expect(Invoice.find_merchants_invoices(@merchant.id, "pending")).to contain_exactly(@invoice2)
+      expect(Invoice.find_merchants_invoices(@merchant.id, "shipped")).to contain_exactly(@invoice3)
+    end
+
+    it "returns an empty array if no invoices match the given merchant and status" do
+      expect(Invoice.find_merchants_invoices(@merchant.id, "canceled")).to be_empty
+    end
+  end
+
+  describe "::find_merchants_customers" do
+    before(:each) do
+      @merchant = Merchant.create!(name: "Store A")
+      @customer1 = Customer.create!(first_name: "John", last_name: "Doe")
+      @customer2 = Customer.create!(first_name: "Jane", last_name: "Smith")
+      @customer3 = Customer.create!(first_name: "Alice", last_name: "Johnson")
+      @invoice1 = Invoice.create!(customer: @customer1, merchant: @merchant, status: "paid") 
+      @invoice2 = Invoice.create!(customer: @customer2, merchant: @merchant, status: "paid") 
+      @invoice3 = Invoice.create!(customer: @customer3, merchant: @merchant, status: "pending") 
+      @other_merchant_customer = Invoice.create!(customer: Customer.create!(first_name: "Bob", last_name: "Brown"), merchant: Merchant.create!(name: "Other Store"), status: "paid")
+    end
+
+    it "can find the customers of a given merchant" do
+      customers = Invoice.find_merchants_customers(@merchant.id)
+      expect(customers.map(&:id)).to match_array([@customer1.id, @customer2.id, @customer3.id])
+    end
+
+    it "returns an empty array if the merchant has no customers" do
+      new_merchant = Merchant.create!(name: "New Store")
+      expect(Invoice.find_merchants_customers(new_merchant.id)).to be_empty
     end
   end
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# RSpec.describe Invoice, type: :model do
-#   it {should belong_to :merchant}
-#   it {should belong_to :customer}
-
-#   it {should have_many :invoice_items}
-#   it {should have_many :transactions}
-
-#   describe "" do
-#     before(:each) do
-#     end
-#   end
-# end
