@@ -9,8 +9,8 @@ Rails.application.routes.draw do
   # root "posts#index"
 
   # Non-Restful Routes
-  get "api/v1/merchants/find", to: "api/v1/merchants/find_merchants#show" ####
-  get "api/v1/items/find_all", to: "api/v1/items/find_items#show" ####
+  get "api/v1/merchants/find", to: "api/v1/merchants/find_merchants#show" 
+  get "api/v1/items/find_all", to: "api/v1/items/find_items#show"
 
   # Merchant Routes
   get "api/v1/merchants", to: "api/v1/merchants#index"
@@ -27,7 +27,7 @@ Rails.application.routes.draw do
   delete "api/v1/items/:id", to: "api/v1/items#destroy"
 
   # Customers
-  get "api/v1/merchants/:merchant_id/customers", to: "api/v1/merchants/customer#show" ####
+  get "api/v1/merchants/:merchant_id/customers", to: "api/v1/merchants/customer#show"
 
   # Invoices
   get "api/v1/merchants/:merchant_id/invoices", to: "api/v1/merchants/invoices#show"
