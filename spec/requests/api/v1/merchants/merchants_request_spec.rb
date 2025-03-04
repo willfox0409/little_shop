@@ -131,6 +131,15 @@ RSpec.describe "Merchants endpoints", type: :request do
       expect(response.status).to eq(200)
       expect(merchant.name).to eq("On the Double - UK SNACKS")
     end
+
+    it "returns a 404 error if merchant is not found" do # Sad Path
+      get "/api/v1/merchants/999999"
+
+      error_response = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response.status).to eq(404)
+      expect(error_response[:errors][0][:message]).to eq("Couldn't find Merchant with 'id'=999999")
+    end
   end
 
   describe "#destroy" do
@@ -143,6 +152,15 @@ RSpec.describe "Merchants endpoints", type: :request do
       delete "/api/v1/merchants/#{merchant1.id}"
 
       expect(Merchant.all.length).to eq(1)
+    end
+
+    it "returns a 404 error if merchant is not found" do # Sad Path
+      get "/api/v1/merchants/999999"
+
+      error_response = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response.status).to eq(404)
+      expect(error_response[:errors][0][:message]).to eq("Couldn't find Merchant with 'id'=999999")
     end
   end
 end
