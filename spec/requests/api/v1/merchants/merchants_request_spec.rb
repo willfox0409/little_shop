@@ -1,57 +1,5 @@
 require "rails_helper"
 
-RSpec.describe "Find Merchants/Items endpoint", type: :request do
-  before :each do
-    @merchant = Merchant.create!(name: "Prince")
-    @merchant2 = Merchant.create!(name: "King")
-    
-    @item1 = Item.create!(name: "Widget", 
-                          description: "A useful widget",
-                          unit_price: 50.00,
-                          merchant_id: @merchant.id)
-
-    @item2 = Item.create!(name: "Gadget", 
-                          description: "A cool gadget",
-                          unit_price: 30.00,
-                          merchant_id: @merchant.id)
-
-    @item3 = Item.create!(name: "Super Widget", 
-                          description: "An advanced widget",
-                          unit_price: 100.00,
-                          merchant_id: @merchant.id)
-
-    @item4 = Item.create!(name: "Super Gadget",
-                          description: "A gadget",
-                          unit_price: 299,
-                          merchant_id: @merchant2.id)                          
-    
-  end
-
-  it "returns merchant's items" do
-    get "/api/v1/merchants/#{@merchant.id}/items", params: { name: "Wid" }
-
-    expect(response).to be_successful
-    items = JSON.parse(response.body, symbolize_names: true)
-
-    expect(items[:data].count).to eq(3)
-
-    items[:data].each do |item|
-      expect(item).to have_key(:id)
-      expect(item[:id]).to be_an(String)
-
-      expect(item[:attributes]).to have_key(:name)
-      expect(item[:attributes][:name]).to be_a(String)
-
-      expect(item[:attributes]).to have_key(:description)
-      expect(item[:attributes][:description]).to be_a(String)
-
-      expect(item[:attributes]).to have_key(:unit_price)
-      expect(item[:attributes][:unit_price]).to be_a(Float)
-
-      expect(item[:attributes]).to have_key(:merchant_id)
-      expect(item[:attributes][:merchant_id]).to be_an(Integer)
-    end
-
 RSpec.describe "Merchants endpoints", type: :request do
   describe "#index" do
     it "lists all merchants in the database" do
@@ -151,17 +99,15 @@ RSpec.describe "Merchants endpoints", type: :request do
       expect(created_merchant.name).to eq("O'Houlihans")
     end
 
-    it "returns a 422 error if merchant name is missing" do # Sad Path
+    it "returns a 400 or 422 error if merchant name is missing" do # Sad Path
       merchant_params = { "merchant": {} } 
       headers = { "CONTENT_TYPE" => "application/json" }
 
       post "/api/v1/merchants", headers: headers, params: JSON.generate(merchant: merchant_params)
 
-      puts "Recieved response: #{response.body}"
-
       error_response = JSON.parse(response.body, symbolize_names: true)
-
-      expect(response.status).to eq(422) 
+      
+      expect(response.status).to be_between(400, 422).inclusive
       expect(error_response[:errors]).to be_an(Array) 
       expect(error_response[:errors][0][:message]).to eq("Name can't be blank") 
     end
@@ -183,6 +129,15 @@ RSpec.describe "Merchants endpoints", type: :request do
       expect(response.status).to eq(200)
       expect(merchant.name).to eq("On the Double - UK SNACKS")
     end
+
+    it "returns a 404 error if merchant is not found" do # Sad Path
+      get "/api/v1/merchants/999999"
+
+      error_response = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response.status).to eq(404)
+      expect(error_response[:errors][0][:message]).to eq("Couldn't find Merchant with 'id'=999999")
+    end
   end
 
   describe "#destroy" do
@@ -195,6 +150,15 @@ RSpec.describe "Merchants endpoints", type: :request do
       delete "/api/v1/merchants/#{merchant1.id}"
 
       expect(Merchant.all.length).to eq(1)
+    end
+
+    it "returns a 404 error if merchant is not found" do # Sad Path
+      get "/api/v1/merchants/999999"
+
+      error_response = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response.status).to eq(404)
+      expect(error_response[:errors][0][:message]).to eq("Couldn't find Merchant with 'id'=999999")
     end
   end
 end

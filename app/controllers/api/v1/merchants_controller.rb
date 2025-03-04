@@ -16,6 +16,9 @@ class Api::V1::MerchantsController < ApplicationController
     end
 
     def create
+        if params[:merchant].nil?
+            return render json: ErrorSerializer.new("Can't create a merchant without any params", "400"), status: :bad_request
+        end
         merchant = Merchant.create!(merchant_params)
         render json: MerchantSerializer.format_single(merchant), status: :created
     end
