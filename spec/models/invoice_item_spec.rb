@@ -7,7 +7,7 @@ RSpec.describe InvoiceItem, type: :model do
   end
   it "belongs to an invoice" do
     invoice = Invoice.create!(customer: Customer.create!(first_name: "John", last_name: "Doe"), merchant: Merchant.create!(name: "Store A"), status: "paid")
-    item = Item.create!(name: "Product 1", unit_price: 10, merchant: Merchant.create!(name: "Store A"))
+    item = Item.create!(name: "Product 1", description: "description", unit_price: 10, merchant: Merchant.create!(name: "Store A"))
     invoice_item = InvoiceItem.create!(invoice: invoice, item: item, quantity: 2, unit_price: 10)
 
     expect(invoice_item.invoice).to eq(invoice)
@@ -15,7 +15,7 @@ RSpec.describe InvoiceItem, type: :model do
 
   it "belongs to an item" do
     invoice = Invoice.create!(customer: Customer.create!(first_name: "John", last_name: "Doe"), merchant: Merchant.create!(name: "Store A"), status: "paid")
-    item = Item.create!(name: "Product 1", unit_price: 10, merchant: Merchant.create!(name: "Store A"))
+    item = Item.create!(name: "Product 1", description: "description", unit_price: 10, merchant: Merchant.create!(name: "Store A"))
     invoice_item = InvoiceItem.create!(invoice: invoice, item: item, quantity: 2, unit_price: 10)
 
     expect(invoice_item.item).to eq(item)
