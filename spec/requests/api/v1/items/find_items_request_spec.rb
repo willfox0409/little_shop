@@ -87,7 +87,7 @@ RSpec.describe "Find Items endpoint", type: :request do
   it "returns an error when no parameters are provided" do
     get "/api/v1/items/find_all"
 
-    expect(response).to have_http_status(:bad_request) # Adjust if needed
+    expect(response).to have_http_status(:bad_request) 
     error_response = JSON.parse(response.body, symbolize_names: true)
 
     expect(error_response).to have_key(:error)

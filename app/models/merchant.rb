@@ -15,7 +15,7 @@ class Merchant < ApplicationRecord
   end
 
   def self.find_merchant(merchant_param)
-    find_by_sql(["SELECT * FROM merchants WHERE name ILIKE ?", "%#{merchant_param}%"]).first
+    Merchant.where("name ILIKE ?", "%#{merchant_param}%").first
   end
 
   def item_count
