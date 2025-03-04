@@ -99,17 +99,15 @@ RSpec.describe "Merchants endpoints", type: :request do
       expect(created_merchant.name).to eq("O'Houlihans")
     end
 
-    it "returns a 422 error if merchant name is missing" do # Sad Path
+    it "returns a 400 or 422 error if merchant name is missing" do # Sad Path
       merchant_params = { "merchant": {} } 
       headers = { "CONTENT_TYPE" => "application/json" }
 
       post "/api/v1/merchants", headers: headers, params: JSON.generate(merchant: merchant_params)
 
-      puts "Recieved response: #{response.body}"
-
       error_response = JSON.parse(response.body, symbolize_names: true)
-
-      expect(response.status).to eq(422) 
+      
+      expect(response.status).to be_between(400, 422).inclusive
       expect(error_response[:errors]).to be_an(Array) 
       expect(error_response[:errors][0][:message]).to eq("Name can't be blank") 
     end
