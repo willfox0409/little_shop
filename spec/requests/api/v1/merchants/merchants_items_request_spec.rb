@@ -24,16 +24,15 @@ RSpec.describe "Find Merchants/Items endpoint", type: :request do
                           description: "A gadget",
                           unit_price: 299,
                           merchant_id: @merchant2.id)                          
-    
   end
 
-  it "returns merchant's items" do
-    get "/api/v1/merchants/#{@merchant.id}/items", params: { name: "Wid" }
+  it "returns all items for a valid merchant" do
+    get "/api/v1/merchants/#{@merchant.id}/items"
 
     expect(response).to be_successful
     items = JSON.parse(response.body, symbolize_names: true)
 
-    expect(items[:data].count).to eq(3)
+    expect(items[:data].count).to eq(3) 
 
     items[:data].each do |item|
       expect(item).to have_key(:id)
@@ -49,13 +48,24 @@ RSpec.describe "Find Merchants/Items endpoint", type: :request do
       expect(item[:attributes][:unit_price]).to be_a(Float)
 
       expect(item[:attributes]).to have_key(:merchant_id)
-      expect(item[:attributes][:merchant_id]).to be_an(Integer)
+      expect(item[:attributes][:merchant_id]).to eq(@merchant.id)
     end
   end
 
-  it "returns 404 for a bad integer id" do
-    get "/api/v1/merchants/#{@merchant.id}/items)", params: {}
+  it "returns 404 when merchant does not exist" do
+    get "/api/v1/merchants/103876287/items" 
 
-    expect(response).to have_http_status(404) 
+    expect(response).to have_http_status(:not_found)
+
+    error_response = JSON.parse(response.body, symbolize_names: true)
+    expect(error_response).to have_key(:error)
+    expect(error_response[:error]).to eq("Merchant not found")
+  end
+
+  it "returns 404 when given an invalid merchant ID format" do
+    get "/api/v1/merchants/invalid_id/items" 
+
+    expect(response).to have_http_status(:not_found)
   end
 end
+
