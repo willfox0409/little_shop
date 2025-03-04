@@ -37,4 +37,3 @@ class Item < ApplicationRecord
     order(:unit_price)
   end
 end
-

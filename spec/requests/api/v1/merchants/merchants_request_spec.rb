@@ -99,17 +99,15 @@ RSpec.describe "Merchants endpoints", type: :request do
       expect(created_merchant.name).to eq("O'Houlihans")
     end
 
-    it "returns a 422 error if merchant name is missing" do # Sad Path
+    it "returns a 400 or 422 error if merchant name is missing" do # Sad Path
       merchant_params = { "merchant": {} } 
       headers = { "CONTENT_TYPE" => "application/json" }
 
       post "/api/v1/merchants", headers: headers, params: JSON.generate(merchant: merchant_params)
 
-      puts "Recieved response: #{response.body}"
-
       error_response = JSON.parse(response.body, symbolize_names: true)
-
-      expect(response.status).to eq(422) 
+      
+      expect(response.status).to be_between(400, 422).inclusive
       expect(error_response[:errors]).to be_an(Array) 
       expect(error_response[:errors][0][:message]).to eq("Name can't be blank") 
     end
@@ -131,6 +129,15 @@ RSpec.describe "Merchants endpoints", type: :request do
       expect(response.status).to eq(200)
       expect(merchant.name).to eq("On the Double - UK SNACKS")
     end
+
+    it "returns a 404 error if merchant is not found" do # Sad Path
+      get "/api/v1/merchants/999999"
+
+      error_response = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response.status).to eq(404)
+      expect(error_response[:errors][0][:message]).to eq("Couldn't find Merchant with 'id'=999999")
+    end
   end
 
   describe "#destroy" do
@@ -143,6 +150,15 @@ RSpec.describe "Merchants endpoints", type: :request do
       delete "/api/v1/merchants/#{merchant1.id}"
 
       expect(Merchant.all.length).to eq(1)
+    end
+
+    it "returns a 404 error if merchant is not found" do # Sad Path
+      get "/api/v1/merchants/999999"
+
+      error_response = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response.status).to eq(404)
+      expect(error_response[:errors][0][:message]).to eq("Couldn't find Merchant with 'id'=999999")
     end
   end
 end

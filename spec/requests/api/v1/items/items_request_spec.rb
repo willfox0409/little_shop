@@ -1,4 +1,5 @@
 require "rails_helper"
+
 RSpec.describe "Item endpoints", type: :request do
   describe '#index' do
     it 'lists all items in the database' do
@@ -69,18 +70,32 @@ RSpec.describe "Item endpoints", type: :request do
       expect(itemData).to have_key(:id)
       expect(itemData[:id]).to be_an(String)
       expect(itemData[:attributes]).to have_key(:name)
-      # expect(itemData[:attributes][:name]).to be_a(String)
       expect(itemData[:attributes][:name]).to eq('Basketball Hoop')
       expect(itemData[:attributes]).to have_key(:description)
-      # expect(itemData[:attributes][:description]).to be_a(String)
       expect(itemData[:attributes][:description]).to eq('Regulation Height')
       expect(itemData[:attributes]).to have_key(:unit_price)
-      # expect(itemData[:attributes][:unit_price]).to be_a(Float)
       expect(itemData[:attributes][:unit_price]).to eq(225.00)
       expect(itemData[:attributes]).to have_key(:merchant_id)
-      # expect(itemData[:attributes][:merchant_id]).to be_a(Integer)
       expect(itemData[:attributes][:merchant_id]).to eq(merchant_id)
     end
+
+      it "returns a 404 error if item ID does not exist" do #Sad Path
+        get "/api/v1/items/999999"
+    
+        error_response = JSON.parse(response.body, symbolize_names: true)
+    
+        expect(response.status).to eq(404)
+        expect(error_response[:errors][0][:message]).to eq("Couldn't find Item with 'id'=999999")
+      end
+    
+      it "returns a 404 error if item ID is a string" do # Edge Case 
+        get "/api/v1/items/not_an_id"
+    
+        error_response = JSON.parse(response.body, symbolize_names: true)
+    
+        expect(response.status).to eq(404)
+        expect(error_response[:errors][0][:message]).to include("Couldn't find Item")
+      end
   end
   
   describe "#create" do
@@ -127,6 +142,15 @@ RSpec.describe "Item endpoints", type: :request do
       expect(item.name).to eq('Moving Rod')
       expect(item.unit_price).to eq(25.00)
     end
+
+    it "returns a 404 error if item ID does not exist" do #Sad Path
+      get "/api/v1/items/999999"
+  
+      error_response = JSON.parse(response.body, symbolize_names: true)
+  
+      expect(response.status).to eq(404)
+      expect(error_response[:errors][0][:message]).to eq("Couldn't find Item with 'id'=999999")
+    end
   end
 
   describe "#destroy" do
@@ -134,19 +158,21 @@ RSpec.describe "Item endpoints", type: :request do
       merchant = Merchant.create!(name: "Jaben Witherspank")
       item = Item.create!(name: "Glue Stick", description: "Strong Adhevise", unit_price: 4.99, merchant_id: merchant.id)
       item2 = Item.create!(name: "Balloon", description: "Full of Air", unit_price: 1.75, merchant_id: merchant.id)
-      # customer = Customer.create(first_name: "Wes", last_name: "Westerson")
-      # invoice = Invoice.create(customer_id: customer.id, merchant_id: merchant.id, status: "sent")
-      # invoice_item = InvoiceItem.create(item_id: item.id, invoice_id: invoice.id, quantity: 1, unit_price: item.unit_price)
-
+    
       expect(Item.all.length).to eq(2)
-
-      # invoice_item.destroy
 
       delete "/api/v1/items/#{item.id}"
 
       expect(Item.all.length).to eq(1)
-      # expect { Item.find(item.id) }.to raise_error(ActiveRecord::RecordNotFound) Will eventually happen ahead of time with error handling
+    end
 
+    it "returns a 404 error if item ID does not exist" do #Sad Path
+      get "/api/v1/items/999999"
+  
+      error_response = JSON.parse(response.body, symbolize_names: true)
+  
+      expect(response.status).to eq(404)
+      expect(error_response[:errors][0][:message]).to eq("Couldn't find Item with 'id'=999999")
     end
   end
 end
