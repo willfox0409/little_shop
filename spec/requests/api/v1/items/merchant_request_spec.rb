@@ -31,7 +31,7 @@ RSpec.describe "Find Items/Merchants endpoint", type: :request do
     
   end
 
-  it "" do
+  it "returns merchants for a given item id" do
     get "/api/v1/merchants/#{@merchant.id}/items", params: { name: "Wid" }
 
     expect(response).to be_successful
@@ -55,5 +55,7 @@ RSpec.describe "Find Items/Merchants endpoint", type: :request do
       expect(item[:attributes]).to have_key(:merchant_id)
       expect(item[:attributes][:merchant_id]).to be_an(Integer)
     end
+
   end
+
 end

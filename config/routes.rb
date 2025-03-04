@@ -30,7 +30,7 @@ Rails.application.routes.draw do
   get "api/v1/merchants/:merchant_id/customers", to: "api/v1/merchants/customer#show" ####
 
   # Invoices
-  get "api/v1/merchants/:merchant_id/invoices?status", to: "api/v1/merchants/invoices#show"
+  get "api/v1/merchants/:merchant_id/invoices", to: "api/v1/merchants/invoices#show"
 
   # Merchant/Item Routes
   get "api/v1/merchants/:id/items", to: "api/v1/merchants/items#show"
