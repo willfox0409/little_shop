@@ -31,5 +31,9 @@ class Item < ApplicationRecord
   def self.find_by_name(name)
     where("name ILIKE ?", "%#{name}%")
   end
+  
+  def self.sorted_by_price
+    order(:unit_price)
+  end
 end
 
