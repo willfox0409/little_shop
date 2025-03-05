@@ -90,7 +90,7 @@ RSpec.describe "Find Items endpoint", type: :request do
     expect(response).to have_http_status(:bad_request) 
     error_response = JSON.parse(response.body, symbolize_names: true)
 
-    expect(error_response).to have_key(:error)
-    expect(error_response[:error]).to be_a(String)
+    expect(error_response).to have_key(:errors)
+    expect(error_response[:errors][0][:message]).to eq("Must provide a search parameter (name, min_price, or max_price)")
   end
 end

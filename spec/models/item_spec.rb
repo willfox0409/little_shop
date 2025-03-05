@@ -71,11 +71,11 @@ RSpec.describe Item, type: :model do
 
     describe '.find_items_merchant' do
       it 'returns the merchant of a given item' do
-        expect(Item.find_items_merchant(@item1.id).first).to eq(@merchant)
+        expect(Item.find_items_merchant(@item1.id)).to eq(@merchant)
       end
 
       it 'returns nil if the item does not exist' do
-        expect(Item.find_items_merchant(999999)).to be_empty
+        expect(Item.find_items_merchant(999999)).to be_nil
       end
     end
 
