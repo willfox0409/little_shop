@@ -75,7 +75,7 @@ RSpec.describe Item, type: :model do
       end
 
       it 'returns nil if the item does not exist' do
-        expect(Item.find_items_merchant(999999)).to be_nil
+        expect(Item.find_items_merchant(837291)).to eq(nil)
       end
     end
 

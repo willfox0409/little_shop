@@ -143,6 +143,14 @@ RSpec.describe "Item endpoints", type: :request do
       expect(item.unit_price).to eq(25.00)
     end
 
+    it "update sad path, merchant id does not exist" do #edge case
+      merchant = Merchant.create!(name: 'Bart')
+      item = Item.create!(name: 'Cattle Prod', description: 'Pokey Stick', unit_price: 25.00, merchant_id: merchant.id)
+      post "/api/v1/items/:#{item.id}", params: { name: "Poking Stick", description: "Stick for poking", unit_price: 25.00, merchant_id: 21}
+  
+      expect(response.status).to eq(404)
+    end
+
     it "returns a 404 error if item ID does not exist" do #Sad Path
       get "/api/v1/items/999999"
   

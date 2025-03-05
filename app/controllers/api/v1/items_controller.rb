@@ -22,8 +22,13 @@ class Api::V1::ItemsController < ApplicationController
     end
     
     def update
-        item = Item.update(params[:id], item_params)
+      item = Item.update(params[:id], item_params)
+
+      if !item.merchant_exists?(item.merchant_id)
+        render json: { message: "Invalid merchant id" }, status: 404
+      else
         render json: ItemSerializer.format_single(item)
+      end
     end
 
     def destroy

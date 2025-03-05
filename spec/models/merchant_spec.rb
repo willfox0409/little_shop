@@ -62,7 +62,6 @@ RSpec.describe Merchant, type: :model do
     end
 
     it "returns an empty ActiveRecord relation if no merchants exist" do # Edge Case
-      Merchant.destroy_all
       expect(Merchant.sort_by_descending).to be_empty
     end
   end

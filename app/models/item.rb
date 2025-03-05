@@ -36,4 +36,13 @@ class Item < ApplicationRecord
   def self.sorted_by_price
     order(:unit_price)
   end
+
+  def merchant_exists?(merchant_id)
+    merchant_id_exists = Merchant.where(id: merchant_id)
+    if merchant_id_exists.empty? 
+      return false 
+    else
+      return true
+    end
+  end
 end
