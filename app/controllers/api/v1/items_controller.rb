@@ -17,12 +17,12 @@ class Api::V1::ItemsController < ApplicationController
     end
 
     def create
-        item = Item.create(item_params)
+        item = Item.create!(item_params)
         render json: ItemSerializer.format_single(item), status: :created
     end
     
     def update
-        item = Item.update(params[:id], item_params)
+        item = Item.update!(params[:id], item_params)
         render json: ItemSerializer.format_single(item)
     end
 
