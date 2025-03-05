@@ -53,9 +53,18 @@ RSpec.describe "Find Merchants/Items endpoint", type: :request do
     end
   end
 
-  it "returns 404 for a bad integer id" do
+  it "returns 404 for no params" do
     get "/api/v1/merchants/#{@merchant.id}/items)", params: {}
 
     expect(response).to have_http_status(404) 
+  end
+
+  it "returns 404 for a non-existent merchant" do
+    get "/api/v1/merchants/999999/items", params: {} # Non-existent ID
+
+    expect(response).to have_http_status(:not_found) 
+    error_response = JSON.parse(response.body, symbolize_names: true)
+
+    expect(error_response[:error]).to eq("Merchant not found")
   end
 end
