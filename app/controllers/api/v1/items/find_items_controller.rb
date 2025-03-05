@@ -1,6 +1,6 @@
 class Api::V1::Items::FindItemsController < ApplicationController
   def show
-    if params[:max_price].to_f < 0 || params[:min_price].to_f < 0
+    if params[:max_price].to_f < 0 || params[:min_price].to_f < 0 
       return render json: ErrorSerializer.new("Price cannot be negative", "400"), status: :bad_request
     elsif (params[:max_price] && params[:name]) || (params[:min_price] && params[:name])
       return render json: ErrorSerializer.new("Price and Name can not be queried at the same time", "400"), status: :bad_request
