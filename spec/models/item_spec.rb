@@ -75,7 +75,7 @@ RSpec.describe Item, type: :model do
       end
 
       it 'returns nil if the item does not exist' do
-        expect(Item.find_items_merchant(999999)).to be_nil
+        expect(Item.find_items_merchant(837291)).to eq(nil)
       end
     end
 
@@ -122,6 +122,17 @@ RSpec.describe Item, type: :model do
     describe '.sorted_by_price' do
       it 'returns items sorted by unit price in ascending order' do
         expect(Item.sorted_by_price).to eq([@item1, @item2, @item3, @item4])
+      end
+    end
+
+    describe '.merchant_exist?' do
+      it "returns true if merchant exists" do
+        merchant = Merchant.create!(name: "Store A")
+        expect(@item1.merchant_exists?(merchant.id)).to eq(true)
+      end
+      it "returns false if merchant doesn't exist" do
+        Merchant.create!(name: "Store A")
+        expect(@item1.merchant_exists?(93827918)).to eq(false)
       end
     end
   end

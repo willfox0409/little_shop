@@ -111,6 +111,12 @@ RSpec.describe "Merchants endpoints", type: :request do
       expect(error_response[:errors]).to be_an(Array) 
       expect(error_response[:errors][0][:message]).to eq("Name can't be blank") 
     end
+    
+    it "returns an error when no parameters ar given" do
+      post "/api/v1/merchants", params: {}
+
+      expect(response.status).to eq(400)
+    end
   end
 
   describe "#update" do

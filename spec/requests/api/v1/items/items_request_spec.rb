@@ -58,8 +58,7 @@ RSpec.describe "Item endpoints", type: :request do
   describe "#show" do
     it 'can get a single record based upon item id' do
       merchant_id = Merchant.create!(name: "Carlos Danger").id
-      id = Item.create!(name: "Basketball Hoop", description: "Regulation Height", 
-      unit_price: 225.00, merchant_id: merchant_id).id.to_s
+      id = Item.create!(name: "Basketball Hoop", description: "Regulation Height", unit_price: 225.00, merchant_id: merchant_id).id.to_s
 
       get "/api/v1/items/#{id}"
 
@@ -123,35 +122,45 @@ RSpec.describe "Item endpoints", type: :request do
       expect(new_item.merchant_id).to eq(item_params[:merchant_id])
     end
   end
-
   describe "#update" do
     it 'can update the item' do
       merchant = Merchant.create!(name: 'Bart')
       item = Item.create!(name: 'Cattle Prod', description: 'Pokey Stick', unit_price: 25.00, merchant_id: merchant.id)
 
-      id = item.id
-      previous_name = item.name
-
       item_params = { name: 'Moving Rod' }
-      headers = { "CONTENT_TYPE" => "application/json" }
-      put "/api/v1/items/#{id}", headers: headers, params: JSON.generate({ item: item_params })
+      put "/api/v1/items/#{item.id}", params: { item: item_params }
       item.reload
 
       expect(response).to be_successful
-      expect(item.name).to_not eq(previous_name)
+      expect(item.name).to_not eq("Cattle Prod")
       expect(item.name).to eq('Moving Rod')
       expect(item.unit_price).to eq(25.00)
     end
 
-    it "returns a 404 error if item ID does not exist" do #Sad Path
-      get "/api/v1/items/999999"
-  
-      error_response = JSON.parse(response.body, symbolize_names: true)
-  
+    it "update sad path, merchant id does not exist" do #edge case
+      merchant = Merchant.create!(name: 'Bart')
+      item = Item.create!(name: 'Cattle Prod', description: 'Pokey Stick', unit_price: 25.00, merchant_id: merchant.id)
+
+      post "/api/v1/items/#{item.id}", params: { item: { name: "Poking Stick", description: "Stick for poking", unit_price: 25.00, merchant_id: 21383729 } }
+
       expect(response.status).to eq(404)
-      expect(error_response[:errors][0][:message]).to eq("Couldn't find Item with 'id'=999999")
     end
+    it "returns a 404 error when updating an item with a non-existent merchant_id" do
+      merchant = Merchant.create!(name: "Valid Merchant")
+      item = Item.create!(name: "Test Item", description: "A test item", unit_price: 20.00, merchant_id: merchant.id)
+
+
+      item_params = { merchant_id: 837827989839 }
+      put "/api/v1/items/#{item.id}", params: { item: item_params }
+
+      expect(response.status).to eq(404)
+
+      error_response = JSON.parse(response.body, symbolize_names: true)
+      expect(error_response[:message]).to eq("Invalid merchant id")
+    end
+
   end
+
 
   describe "#destroy" do
     it 'can delete a select item' do
@@ -167,7 +176,7 @@ RSpec.describe "Item endpoints", type: :request do
     end
 
     it "returns a 404 error if item ID does not exist" do #Sad Path
-      get "/api/v1/items/999999"
+      delete "/api/v1/items/999999"
   
       error_response = JSON.parse(response.body, symbolize_names: true)
   

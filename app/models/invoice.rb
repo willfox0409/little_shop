@@ -14,7 +14,7 @@ class Invoice < ApplicationRecord
   end
 
   def self.find_merchants_customers(merchant_id)
-    customers_id = find_by_sql(["SELECT customer_id FROM invoices WHERE merchant_id = ?", merchant_id]).pluck(:customer_id)
-    find_by_sql(["SELECT * FROM customers WHERE id IN (?)", customers_id])
+    customers_id = Invoice.where(merchant_id: merchant_id).pluck(:customer_id)
+    Customer.where(id: customers_id)
   end
 end

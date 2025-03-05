@@ -13,7 +13,6 @@ class Item < ApplicationRecord
 
   def self.find_items_merchant(item_id)
     merchant_id = where(id: item_id).pluck(:merchant_id)
-    # merchant_id = find(item_id).merchant_id
     Merchant.where(id: merchant_id).first
   end
 
@@ -35,5 +34,14 @@ class Item < ApplicationRecord
   
   def self.sorted_by_price
     order(:unit_price)
+  end
+
+  def merchant_exists?(merchant_id)
+    merchant_id_exists = Merchant.where(id: merchant_id)
+    if merchant_id_exists.empty? 
+      return false 
+    else
+      return true
+    end
   end
 end
