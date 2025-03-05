@@ -13,6 +13,7 @@ class Merchant < ApplicationRecord
 
     merchant_ids = Invoice.where(status: status).select(:merchant_id)
     where(id: merchant_ids)
+
   end
 
   def self.find_merchant(merchant_param)

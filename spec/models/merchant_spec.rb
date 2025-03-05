@@ -89,7 +89,9 @@ RSpec.describe Merchant, type: :model do
     end
 
     it "returns an empty ActiveRecord relation if no merchants have invoices with the given status" do # Edge Case
-      expect(Merchant.with_status("shipped")).to eq([@merchant1])
+      Invoice.destroy_all
+      Merchant.destroy_all
+      expect(Merchant.with_status("shipped")).to be_empty
     end
   end
 
