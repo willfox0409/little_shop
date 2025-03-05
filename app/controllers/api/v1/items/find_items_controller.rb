@@ -19,8 +19,6 @@ class Api::V1::Items::FindItemsController < ApplicationController
       end
     elsif params[:name]
       items = Item.find_by_name(params[:name])
-    else
-      return render json: ErrorSerializer.new("Invalid search parameters", status: :bad_request)
     end
 
     render json: ItemSerializer.format_items(items)
