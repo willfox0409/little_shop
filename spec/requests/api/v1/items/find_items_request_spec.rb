@@ -106,4 +106,10 @@ RSpec.describe "Find Items endpoint", type: :request do
 
     expect(response).to have_http_status(:bad_request) 
   end
+
+  it "returns an error code  when no parameters are provided" do
+    get "/api/v1/items/find_all", params: {bad_param: 30}
+
+    expect(response).to have_http_status(:bad_request) 
+  end
 end
